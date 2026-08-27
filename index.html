@@ -285,7 +285,6 @@
         <a class="nav-link" href="asisten.html" target="_blank" style="color: #38bdf8;"><i class="fa-solid fa-chalkboard-user"></i><span class="fw-bold">Kelasku</span></a>
         <a class="nav-link" onclick="showSection('jurnal')" style="color: #f59e0b;"><i class="fa-solid fa-book-open"></i><span class="fw-bold">Jurnal Harian</span></a>
         <a class="nav-link" onclick="showSection('asisten')" style="color: #10b981;"><i class="fa-solid fa-robot"></i><span class="fw-bold">Asisten AI Guru</span></a>
-        <a class="nav-link" style="color: #38bdf8;" onclick="showPengembang()"><i class="fa-solid fa-laptop-code"></i><span class="fw-bold">Info Pengembang</span></a>
         <a class="nav-link mt-4" onclick="showSection('setting')"><i class="fa-solid fa-gear"></i><span>Setting & Database</span></a>
         <a class="nav-link text-danger mt-auto" onclick="resetDataLocal()"><i class="fa-solid fa-power-off"></i><span>Reset Data</span></a>
       </nav>
@@ -1604,13 +1603,6 @@ function syncJurnal(data) {
         });
     }
 
-    function showPengembang() {
-        Swal.fire({
-            title: 'Info Pengembang',
-            html: '<div class="text-start small"><p><b>aplikasi ini dikembangkan oleh Aburrizal hamdani lubis, jika merasa terbantu dan berniat memberikan donasi, bisa kunjungi "https://saweria.co/lubisbima" atau hubungi jika ingin versi dashboard siswa</b></p><p>Email: lubisbima@gmail.com</p><p>Donasi ke BANK JATIM : 0403249033 </p></div>',
-            icon: 'info'
-        });
-    }
 
     // ============================================================
     // FUNGSI HITUNG NILAI AKHIR
