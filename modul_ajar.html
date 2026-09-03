@@ -101,7 +101,7 @@
             
             <div class="hidden sm:flex items-center gap-2 text-xs bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full font-medium border border-emerald-100">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                Koneksi Stabil: Gemini 2.5 Flash
+                Koneksi Stabil: Gemini 3.6 Flash
             </div>
         </div>
     </header>
@@ -168,6 +168,7 @@
                                 <option value="Pendidikan Pancasila">Pendidikan Pancasila</option>
                                 <option value="Seni Budaya">Seni Budaya</option>
                                 <option value="Bahasa Inggris">Bahasa Inggris</option>
+                                <option value="TIK">TIK</option>
                             </select>
                         </div>
                     </div>
@@ -396,8 +397,8 @@
                                         <p>Kepala Sekolah <span id="display-ttd-school">SD Negeri</span></p>
                                     </div>
                                     <div class="space-y-0.5">
-                                        <p class="font-bold underline" id="display-kepsek-name" contenteditable="true">Siti Aminah, M.Pd.</p>
-                                        <p>NIP. <span id="display-kepsek-nip" contenteditable="true">197805142005012003</span></p>
+                                        <p class="font-bold underline" id="display-kepsek-name" contenteditable="true">, M.Pd.</p>
+                                        <p>NIP. <span id="display-kepsek-nip" contenteditable="true">15012003</span></p>
                                     </div>
                                 </div>
                                 <div class="space-y-16">
@@ -406,8 +407,8 @@
                                         <p>Guru Kelas / Bidang Studi,</p>
                                     </div>
                                     <div class="space-y-0.5">
-                                        <p class="font-bold underline" id="display-guru-name" contenteditable="true">Budi Utomo, S.Pd.</p>
-                                        <p>NIP. <span id="display-guru-nip" contenteditable="true">199008122018031002</span></p>
+                                        <p class="font-bold underline" id="display-guru-name" contenteditable="true">, S.Pd.</p>
+                                        <p>NIP. <span id="display-guru-nip" contenteditable="true"></span></p>
                                     </div>
                                 </div>
                             </div>
@@ -434,7 +435,7 @@
     <!-- Logika Aplikasi (JavaScript) -->
     <script>
         // MENGGUNAKAN MODEL PRODUKSI STABIL YANG DIDUKUNG PENUH UNTUK v1beta
-        const modelName = "gemini-2.5-flash"; 
+        const modelName = "gemini-3.6-flash"; 
 
         // Auto isi fase berdasarkan tingkat kelas yang dipilih
         function autoFillFase() {
