@@ -190,7 +190,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl md:text-2xl font-extrabold tracking-tight">APSO (Aplikasi Pembuat Soal Online) - Generator Soal AI</h1>
-                    <p class="text-xs md:text-sm text-emerald-200/90 font-medium">By Aburrizal Hamdani Lubis — Sistem Pembuat Soal AI Gemini</p>
+                    <p class="text-xs md:text-sm text-emerald-200/90 font-medium">By Bejo — Sistem Pembuat Soal AI Gemini</p>
                 </div>
             </div>
             
@@ -609,7 +609,7 @@
         let logoKananData = "";
 
         const fallbackLogoKiriSVG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2YxZjVmOSIgcng9IjE2Ii8+PHBhdGggZD0iTTUwIDE1IEw4MCAzNSBMODAgNzUgTDUwIDkwIEwyMCA3NSBMMjAgMzUgWiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMGY3NjZlIiBzdHJva2Utd2lkdGg9IjQiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMGY3NjZlIiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNNTAgMjUgTDUwIDQwIE01MCA2MCBMNTAgNzUiIHN0cm9rZT0iIzBmNzY2ZSIgc3Ryb2tlLXdpZHRoPSIzIi8+PC9zdmc+";
-        const fallbackLogoKananSVG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2YxZjVmOSIgcng9IjE2Ii8+PHBhdGggZD0iTTIwIDM1IEw1MCAyMCBMODAgMzUgTDUwIDUwIFoiIGZpbGw9IiMwNjRlM2IiLz48cGF0aCBkPSJNMzAgNDUgTDMwIDcwIEw1MCA4MCBMNzAgNzAgTDcwIDQ1IEw1MCA1NSBaIiBmaWxsPSIjMGY3NjZlIi8+PHBhdGggZD0iTTgwIDM1IEw4MCA2NSIgc3Ryb2tlPSIjMGY3NjZlIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg==";
+        const fallbackLogoKananSVG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2YxZjVmOSIgcng9IjE2Ii8+PHBhdGggZD0iTTIwIDM1IEw1MCA2MCBMODAgMzUgTDUwIDUwIFoiIGZpbGw9IiMwNjRlM2IiLz48cGF0aCBkPSJNMzAgNDUgTDMwIDcwIEw1MCA4MCBMNzAgNzAgTDcwIDQ1IEw1MCA1NSBaIiBmaWxsPSIjMGY3NjZlIi8+PHBhdGggZD0iTTgwIDM1IEw4MCA2NSIgc3Ryb2tlPSIjMGY3NjZlIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg==";
 
         window.onload = function() {
             renderTable();
@@ -1042,8 +1042,7 @@
             }
 
             const modelsToTry = [
-                "gemini-2.5-flash",
-                "gemini-1.5-flash"
+                "gemini-3.6-flash"
             ];
 
             let lastError = null;
@@ -1613,7 +1612,6 @@
 
             const mapel = document.getElementById("subjectInput").value;
             const kelas = document.getElementById("classInput").value;
-            const isGuruModeCurrently = document.getElementById("paperPreview").classList.contains("print-guru");
 
             if (mode === 'siswa') {
                 document.getElementById("paperPreview").classList.add("print-siswa");
@@ -1622,178 +1620,6 @@
                 document.getElementById("paperPreview").classList.add("print-guru");
                 document.getElementById("paperPreview").classList.remove("print-siswa");
             }
-
-            const element = document.getElementById("paperPreview");
-            const optElement = element.cloneNode(true);
-            
-            const marginTop = settings.marginTop || 25;
-            const marginBottom = settings.marginBottom || 20;
-            const marginLeft = settings.marginLeft || 20;
-            const marginRight = settings.marginRight || 20;
-            
-            optElement.style.width = '210mm';
-            optElement.style.minHeight = '297mm';
-            optElement.style.padding = `${marginTop}mm ${marginRight}mm ${marginBottom}mm ${marginLeft}mm`;
-            optElement.style.margin = '0';
-            optElement.style.boxShadow = 'none';
-            optElement.style.border = 'none';
-            optElement.style.background = 'white';
-            optElement.style.position = 'relative';
-            optElement.style.boxSizing = 'border-box';
-
-            optElement.classList.remove('edit-mode');
-
-            const headerHTML = `
-                <div style="text-align: center; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 15px;">
-                    <div style="font-size: 14pt; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">${settings.headerTitle}</div>
-                    <div style="font-size: 12pt; font-weight: 600; color: #1e293b;">${settings.headerSub}</div>
-                    <div style="font-size: 10pt; font-weight: 500; color: #475569; margin-top: 2px;">${settings.headerYear}</div>
-                </div>
-            `;
-
-            let footerHTML = `
-                <div style="border-top: 2px solid #cbd5e1; padding-top: 10px; margin-top: 20px; display: flex; justify-content: space-between; font-size: 9pt; color: #64748b;">
-                    <span>${settings.footerLeft}</span>
-                    <span>${settings.footerRight}</span>
-                </div>
-            `;
-
-            if (settings.pageNumberStyle !== 'none') {
-                let pageText = '';
-                if (settings.pageNumberStyle === 'bottom-center') {
-                    pageText = 'Halaman {page} dari {total}';
-                } else if (settings.pageNumberStyle === 'bottom-right') {
-                    pageText = 'Halaman {page}';
-                }
-                footerHTML += `
-                    <div style="text-align: ${settings.pageNumberStyle === 'bottom-right' ? 'right' : 'center'}; font-size: 9pt; color: #94a3b8; margin-top: 5px;">
-                        ${pageText}
-                    </div>
-                `;
-            }
-
-            const contentHTML = optElement.innerHTML;
-            optElement.innerHTML = headerHTML + contentHTML + footerHTML;
-
-            const clonedKiri = optElement.querySelector('#logo-kop-kiri-img');
-            const clonedKanan = optElement.querySelector('#logo-kop-kanan-img');
-            const originalKiri = document.getElementById('logo-kop-kiri-img');
-            const originalKanan = document.getElementById('logo-kop-kanan-img');
-            
-            if (clonedKiri) {
-                clonedKiri.src = getBase64FromImage(originalKiri, fallbackLogoKiriSVG);
-            }
-            if (clonedKanan) {
-                clonedKanan.src = getBase64FromImage(originalKanan, fallbackLogoKananSVG);
-            }
-
-            const fileName = mode === "siswa" 
-                ? `Soal_Ujian_${mapel.replace(/\s+/g, '_')}_Kelas_${kelas.replace(/\s+/g, '_')}.pdf`
-                : `Kunci_Jawaban_${mapel.replace(/\s+/g, '_')}_Kelas_${kelas.replace(/\s+/g, '_')}.pdf`;
-
-            const opt = {
-                margin:       0,
-                filename:     fileName,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, allowTaint: false, logging: false, scrollX: 0, scrollY: 0 },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak:    { mode: ['css', 'legacy'], avoid: '.question-item' }
-            };
-
-            showToast(`Sedang merender lembar PDF ${mode.toUpperCase()} (Ukuran A4)...`, "info");
-            
-            html2pdf().set(opt).from(optElement).save().then(() => {
-                if (isGuruModeCurrently) {
-                    document.getElementById("paperPreview").classList.add("print-guru");
-                    document.getElementById("paperPreview").classList.remove("print-siswa");
-                } else {
-                    document.getElementById("paperPreview").classList.add("print-siswa");
-                    document.getElementById("paperPreview").classList.remove("print-guru");
-                }
-                if (isEditMode) {
-                    document.getElementById("paperPreview").classList.add("edit-mode");
-                }
-                showToast("PDF Berhasil diunduh!", "success");
-            }).catch(err => {
-                console.error("PDF generation error:", err);
-                showToast("Gagal menyimpan PDF: " + err.message, "error");
-            });
-        }
-
-        // ===================== DOWNLOAD DOC =====================
-        function downloadExamDOC() {
-            if (isEditMode) {
-                saveEditsFromPreview();
-            }
-
-            const element = document.getElementById("paperPreview");
-            if (!element || element.innerHTML.trim() === "") {
-                showToast("Belum ada pratinjau soal untuk diunduh!", "error");
-                return;
-            }
-            const mapel = document.getElementById("subjectInput").value;
-            const kelas = document.getElementById("classInput").value;
-            
-            const tempDiv = document.createElement("div");
-            const clone = element.cloneNode(true);
-            clone.classList.remove('edit-mode');
-            tempDiv.innerHTML = clone.innerHTML;
-            
-            const leftImg = tempDiv.querySelector('#logo-kop-kiri-img');
-            const rightImg = tempDiv.querySelector('#logo-kop-kanan-img');
-            const originalKiri = document.getElementById('logo-kop-kiri-img');
-            const originalKanan = document.getElementById('logo-kop-kanan-img');
-
-            if (leftImg) {
-                leftImg.src = getBase64FromImage(originalKiri, fallbackLogoKiriSVG);
-            }
-            if (rightImg) {
-                rightImg.src = getBase64FromImage(originalKanan, fallbackLogoKananSVG);
-            }
-
-            let htmlContent = tempDiv.innerHTML;
-            
-            const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
-                           "xmlns:w='urn:schemas-microsoft-com:office:word' " +
-                           "xmlns='http://www.w3.org/TR/REC-html40'>" +
-                           "<head><title>Lembar Ujian</title>" +
-                           "<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom>" +
-                           "<w:PageSetup><w:PageSize w:w='11906' w:h='16838'/><w:PageMargins w:top='1134' w:bottom='1134' w:left='1134' w:right='1134'/></w:PageSetup>" +
-                           "</w:WordDocument></xml><![endif]-->" +
-                           "<style>" +
-                           "@page { size: 210mm 297mm; margin: 20mm; }" +
-                           "body { font-family: 'Times New Roman', Times, serif; font-size: 11pt; color: black; line-height: 1.25; }" +
-                           ".question-item { margin-bottom: 14px; page-break-inside: avoid; }" +
-                           ".view-text { display: block !important; }" +
-                           ".edit-input { display: none !important; }" +
-                           ".edit-controls { display: none !important; }" +
-                           ".solution-text { display: none !important; }" +
-                           ".print-guru .solution-text { display: block !important; }" +
-                           ".kunci-jawaban-text { display: none !important; }" +
-                           ".print-guru .kunci-jawaban-text { display: block !important; }" +
-                           "</style></head><body>" +
-                           "<div style='width: 170mm; margin: 0 auto;'>";
-            const footer = "</div></body></html>";
-            
-            const sourceHTML = header + htmlContent + footer;
-            const blob = new Blob(['\ufeff' + sourceHTML], {
-                type: 'application/msword'
-            });
-            
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `Soal_Ujian_${mapel.replace(/\s+/g, '_')}_Kelas_${kelas.replace(/\s+/g, '_')}.doc`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            showToast("Berkas .doc (MS Word) berhasil diunduh!", "success");
-        }
-
-        function downloadExamPDF(mode) {
-            openPDFSettings();
         }
     </script>
 </body>
