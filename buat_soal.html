@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pembuat Soal Kuis - SDN 3 Ngantru</title>
+    <title>Pembuat Soal Kuis - SDN 1 Kalisoro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -785,14 +785,17 @@ PENTING: Hanya output JSON ARRAY, tanpa teks lain, tanpa markdown, tanpa backtic
         }
 
         async function fetchGemini(apiKey, prompt) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
+            // DIGANTI: Menggunakan endpoint gemini-2.0-flash terbaru (bukan exp)
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }],
                 generationConfig: {
                     temperature: 0.3,
                     maxOutputTokens: 2048,
                     topP: 0.95,
-                    topK: 40
+                    topK: 40,
+                    // DIGANTI: Menambahkan parameter ini untuk memaksa format output menjadi JSON valid
+                    responseMimeType: "application/json" 
                 }
             };
 
