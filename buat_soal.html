@@ -74,7 +74,7 @@
                     </div>
                     <div>
                         <h1 class="font-extrabold text-base tracking-tight leading-tight">Pembuat Soal Kuis</h1>
-                        <p class="text-[10px] text-teal-100 font-medium">SDN 3 Ngantru</p>
+                        <p class="text-[10px] text-teal-100 font-medium">SDN 1 Kalisoro</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
@@ -101,7 +101,7 @@
                 <div class="flex items-center gap-2 border-b border-slate-100 pb-2.5">
                     <i class="bi bi-magic text-orange-500 text-lg"></i>
                     <h2 class="font-bold text-slate-900 text-sm">Generator Soal AI</h2>
-                    <span class="ml-auto text-[8px] bg-slate-100 px-2 py-0.5 rounded-full text-slate-400">Gemini 2.0 Flash</span>
+                    <span class="ml-auto text-[8px] bg-slate-100 px-2 py-0.5 rounded-full text-slate-400">Gemini 3.6 Flash</span>
                 </div>
 
                 <div class="space-y-3">
@@ -454,7 +454,6 @@
                     <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
                     <span class="text-slate-400">Tidak terhubung</span>
                 `;
-                // Jangan tampilkan error untuk ping karena CORS
                 console.log('Ping gagal karena CORS, tapi data tetap bisa dikirim dengan mode no-cors');
             }
         }
@@ -734,7 +733,6 @@ PENTING: Hanya output JSON ARRAY, tanpa teks lain, tanpa markdown, tanpa backtic
                 const response = await fetchGemini(apiKey, prompt);
                 console.log('Raw AI Response:', response);
 
-                // Bersihkan response
                 let clean = response.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
                 let match = clean.match(/\[[\s\S]*\]/);
                 if (!match) throw new Error('Tidak ditemukan format JSON Array yang valid');
@@ -785,8 +783,8 @@ PENTING: Hanya output JSON ARRAY, tanpa teks lain, tanpa markdown, tanpa backtic
         }
 
         async function fetchGemini(apiKey, prompt) {
-            // DIGANTI: Menggunakan endpoint gemini-2.0-flash terbaru (bukan exp)
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            // TERBARU: Menggunakan endpoint gemini-3.6-flash
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }],
                 generationConfig: {
@@ -794,7 +792,6 @@ PENTING: Hanya output JSON ARRAY, tanpa teks lain, tanpa markdown, tanpa backtic
                     maxOutputTokens: 2048,
                     topP: 0.95,
                     topK: 40,
-                    // DIGANTI: Menambahkan parameter ini untuk memaksa format output menjadi JSON valid
                     responseMimeType: "application/json" 
                 }
             };
@@ -923,15 +920,13 @@ PENTING: Hanya output JSON ARRAY, tanpa teks lain, tanpa markdown, tanpa backtic
                 }
             };
             reader.readAsArrayBuffer(file);
-            // Reset input
             e.target.value = '';
         }
 
         // ============================================================
-        // KIRIM KE APPS SCRIPT - DIPERBAIKI DENGAN no-cors
+        // KIRIM KE APPS SCRIPT
         // ============================================================
         async function sendToAppsScript() {
-            // Cegah double click
             if (isSending) {
                 showToast('⏳ Proses sedang berjalan, tunggu sebentar...', false);
                 return;
@@ -954,7 +949,6 @@ PENTING: Hanya output JSON ARRAY, tanpa teks lain, tanpa markdown, tanpa backtic
                 return;
             }
 
-            // Validasi
             for (let i = 0; i < questions.length; i++) {
                 const q = questions[i];
                 if (!q.pertanyaan.trim()) {
@@ -1006,7 +1000,6 @@ PENTING: Hanya output JSON ARRAY, tanpa teks lain, tanpa markdown, tanpa backtic
 
                     showToast('⏳ Mengirim data ke server...', true);
 
-                    // ========== PAKAI 'no-cors' AGAR TIDAK DIBLOKIR ==========
                     await fetch(url, {
                         method: 'POST',
                         mode: 'no-cors',
@@ -1016,10 +1009,8 @@ PENTING: Hanya output JSON ARRAY, tanpa teks lain, tanpa markdown, tanpa backtic
                         body: JSON.stringify(payload)
                     });
 
-                    // ========== DATA SUDAH TERKIRIM ==========
                     showToast('✅ Data berhasil dikirim! Silakan cek spreadsheet.', true);
 
-                    // ========== VERIFIKASI: Coba ambil data ==========
                     setTimeout(async () => {
                         try {
                             const verifyResponse = await fetch(url + '?action=get_kuis');
@@ -1028,7 +1019,6 @@ PENTING: Hanya output JSON ARRAY, tanpa teks lain, tanpa markdown, tanpa backtic
                                 showToast(`✅ Terverifikasi! ${verifyResult.data.length} soal tersimpan.`, true);
                             }
                         } catch (e) {
-                            // Abaikan error verifikasi karena CORS
                             console.log('Verifikasi tidak bisa dilakukan karena CORS');
                         }
                     }, 5000);
@@ -1036,7 +1026,6 @@ PENTING: Hanya output JSON ARRAY, tanpa teks lain, tanpa markdown, tanpa backtic
                 } catch (error) {
                     console.error('❌ Error:', error);
                     
-                    // Jika error karena CORS, tetap anggap sukses karena data sudah terkirim
                     if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
                         showToast('⚠️ Data mungkin sudah terkirim. Cek spreadsheet secara manual.', false);
                     } else {
@@ -1073,7 +1062,6 @@ PENTING: Hanya output JSON ARRAY, tanpa teks lain, tanpa markdown, tanpa backtic
                 const result = await response.json();
 
                 if (result.status === 'success' && result.data && result.data.length > 0) {
-                    // Konversi data dari spreadsheet ke format soal
                     const loadedQuestions = result.data.map((row, idx) => {
                         let rawType = (row['Tipe'] || 'PG').toString().trim();
                         let pertanyaan = row['Pertanyaan'] || '';
@@ -1124,14 +1112,9 @@ PENTING: Hanya output JSON ARRAY, tanpa teks lain, tanpa markdown, tanpa backtic
             }
         }
 
-        // ============================================================
-        // KETIKA HALAMAN DI-RESIZE (UNTUK MOBILE)
-        // ============================================================
         window.addEventListener('resize', function() {
             // Tidak ada aksi khusus
         });
-
     </script>
-
 </body>
 </html>
