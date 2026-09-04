@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Susun Kata - SDN 1 Kalisoro/title>
+    <!-- PERBAIKAN: Tag penutup title sebelumnya kurang karakter '<' -->
+    <title>Susun Kata - SDN 1 Kalisoro</title> 
     <!-- Tailwind CSS, Google Fonts, & Font Awesome -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -213,7 +214,7 @@
         // DATABASE KOSA KATA GAME (Dua Kategori Pilihan)
         // ============================================================
         const wordDatabase = {
-            id: [ // Kategori Bahasa Indonesia
+            id: [
                 { word: "GURU", clue: "Pahlawan tanpa tanda jasa yang mengajar kita ilmu di sekolah." },
                 { word: "PENSIL", clue: "Alat tulis berbahan dasar grafit yang biasa digunakan untuk menggambar atau menulis." },
                 { word: "BENDERA", clue: "Lambang kehormatan bangsa Indonesia yang berwarna merah putih." },
@@ -222,41 +223,48 @@
                 { word: "PANCASILA", clue: "Dasar dan pedoman falsafah hidup bernegara bangsa Indonesia." },
                 { word: "ISTANA", clue: "Tempat tinggal megah raja atau kepala negara presiden." }
             ],
-            jv: [ // Kategori Bahasa Jawa (Sinau Boso)
+            jv: [
                 { word: "SINAU", clue: "Kegiatan golek ilmu utowo belajar supados dados bocah pinter." },
                 { word: "SARAPAN", clue: "Kegiatan dhahar/mangan ing wayah isuk sakdurunge mangkat sekolah." },
                 { word: "KRAMA", clue: "Tingkatan basa Jawa sing sopan lan digunakake kanggo wong tuwo." },
                 { word: "SEKUL", clue: "Krama inggil (sebutan halus) saka sega utawa nasi." },
                 { word: "GARUDA", clue: "Manuk perkasa sing dadi lambang negara kita Indonesia." },
                 { word: "WULAN", clue: "Sebutan basa Jawa kanggo rembulan utawa sasi." },
-                { word: "KANCING", clue: "Basa krama inggil saka untu yaiku reman..." } // Ditukar sederhana untuk anak-anak
+                { word: "KANCING", clue: "Basa krama inggil saka untu yaiku reman..." } 
             ]
         };
 
         // ============================================================
         // SYNTHESIZER AUDIO DIGITAL (NADA SLENDRO GAMELAN)
         // ============================================================
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        // PERBAIKAN: Lazy load AudioContext agar tidak diblokir browser
+        let audioCtx;
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
         
         function playSaronTone(frequency, duration = 0.8) {
             try {
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-                const now = audioCtx.currentTime;
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
                 
-                // Overtones logam gamelan saron kuno
                 const overtones = [1.0, 2.76, 5.4, 8.1];
                 const gains = [0.55, 0.25, 0.1, 0.05];
 
-                const masterGain = audioCtx.createGain();
+                const masterGain = ctx.createGain();
                 masterGain.gain.setValueAtTime(0.12, now);
                 masterGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-                masterGain.connect(audioCtx.destination);
+                masterGain.connect(ctx.destination);
 
                 overtones.forEach((multiplier, index) => {
-                    const osc = audioCtx.createOscillator();
-                    const oscGain = audioCtx.createGain();
+                    const osc = ctx.createOscillator();
+                    const oscGain = ctx.createGain();
 
                     osc.type = index === 0 ? 'sine' : 'triangle';
                     osc.frequency.setValueAtTime(frequency * multiplier, now);
@@ -292,7 +300,7 @@
         // ============================================================
         // STATE MANAJEMEN GAME
         // ============================================================
-        let selectedCategory = 'id'; // Default 'id' (Bahasa Indonesia)
+        let selectedCategory = 'id';
         let currentWordIndex = 0;
         let gameScore = 0;
         let livesRemaining = 3;
@@ -300,7 +308,7 @@
         let currentTargetWord = "";
         let currentTargetClue = "";
         let shuffledLetters = [];
-        let selectedAnswerIndices = []; // Menyimpan index huruf di shuffledLetters yang dipilih siswa
+        let selectedAnswerIndices = []; 
         let selectedQuestions = [];
 
         const LOCAL_STORAGE_KEY = 'high_score_susun_kata_v1';
@@ -318,7 +326,6 @@
             playSound('click');
             selectedCategory = categoryCode;
 
-            // Atur gaya visual tombol pilihan kategori
             document.querySelectorAll('.category-btn').forEach(btn => {
                 btn.className = "category-btn border-2 border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold p-3.5 rounded-2xl flex items-center justify-between transition text-sm";
             });
@@ -340,7 +347,6 @@
             document.getElementById('currentScore').textContent = "0";
             document.getElementById('currentQuestionIndex').textContent = "1";
 
-            // Acak 5 soal dari basis data kategori terpilih
             const dbSource = wordDatabase[selectedCategory];
             selectedQuestions = [...dbSource].sort(() => Math.random() - 0.5).slice(0, 5);
 
@@ -358,10 +364,8 @@
             document.getElementById('currentQuestionIndex').textContent = questionStep;
             document.getElementById('questionClue').textContent = currentTargetClue;
 
-            // Acak huruf-huruf pembentuk kata utama
             shuffledLetters = currentTargetWord.split('').sort(() => Math.random() - 0.5);
             
-            // Jaminan: jika acakan sama persis dengan aslinya, balikkan posisinya
             if (shuffledLetters.join('') === currentTargetWord) {
                 shuffledLetters.reverse();
             }
@@ -402,12 +406,10 @@
             const container = document.getElementById('answerSlotsBox');
             container.innerHTML = '';
 
-            // Tampilkan slot kosong sebanyak panjang kata
             for (let i = 0; i < currentTargetWord.length; i++) {
                 const slot = document.createElement('div');
                 slot.className = "w-11 h-11 md:w-12 md:h-12 rounded-xl border-2 border-dashed border-slate-300 flex items-center justify-center font-extrabold text-lg md:text-xl";
                 
-                // Jika index ini sudah diisi oleh siswa
                 if (i < selectedAnswerIndices.length) {
                     const originalIndex = selectedAnswerIndices[i];
                     slot.className = "w-11 h-11 md:w-12 md:h-12 bg-emerald-600 text-white rounded-xl flex items-center justify-center font-extrabold text-lg md:text-xl shadow-md cursor-pointer hover:bg-red-500 transition-colors";
@@ -430,7 +432,6 @@
 
         function removeLetterFromAnswer(answerIndex) {
             playSound('click');
-            // Hapus index terpilih
             selectedAnswerIndices.splice(answerIndex, 1);
             renderLetterPool();
             renderAnswerSlots();
@@ -444,7 +445,7 @@
         }
 
         // ============================================================
-        // SISTEM EVALUASI NYAWA (HEARTS) & JAWA BAN
+        // SISTEM EVALUASI NYAWA (HEARTS) & JAWABAN
         // ============================================================
         function updateHeartsUI() {
             const container = document.getElementById('heartContainer');
@@ -462,43 +463,50 @@
         }
 
         function submitAnswer() {
-            // Evaluasi panjang jawaban harus lengkap
             if (selectedAnswerIndices.length < currentTargetWord.length) {
                 showFeedback("Lengkapi Dulu Hurufmu!", "wrong");
                 playSound('wrong');
                 return;
             }
 
-            // Gabungkan susunan huruf dari indeks pilihan
             const constructedWord = selectedAnswerIndices.map(idx => shuffledLetters[idx]).join('');
             const feedbackEl = document.getElementById('feedbackMessage');
+            
+            let isCorrect = false;
 
+            // PERBAIKAN LOGIKA: Hanya berikan skor dan lanjut soal jika Benar.
+            // Jika salah, cukup kurangi nyawa & bersihkan susunan tanpa skip soal.
             if (constructedWord === currentTargetWord) {
-                // Jawaban Betul
+                isCorrect = true;
                 playSound('correct');
                 gameScore += 20;
                 document.getElementById('currentScore').textContent = gameScore;
                 showFeedback("Benar Sekali! 👍", "correct");
             } else {
-                // Jawaban Salah
                 playSound('wrong');
                 livesRemaining--;
                 updateHeartsUI();
-                showFeedback(`Kurang Tepat! Kuncinya: ${currentTargetWord}`, "wrong");
+                showFeedback("Kurang Tepat! Coba lagi ya.", "wrong");
             }
 
-            // Kunci sementara dari interaksi klik berlebih
             document.getElementById('screenPlay').classList.add('pointer-events-none');
 
             setTimeout(() => {
                 document.getElementById('screenPlay').classList.remove('pointer-events-none');
                 feedbackEl.className = "h-6 text-center text-sm font-extrabold uppercase tracking-wider opacity-0 transition-all duration-300";
 
-                if (livesRemaining > 0 && questionStep < 5) {
-                    questionStep++;
-                    setupQuestion();
-                } else {
+                if (livesRemaining <= 0) {
                     endGame();
+                } else if (isCorrect) {
+                    if (questionStep < 5) {
+                        questionStep++;
+                        setupQuestion();
+                    } else {
+                        endGame();
+                    }
+                } else {
+                    // Jika jawaban salah, susunan huruf dibersihkan agar siswa dapat mencoba lagi
+                    resetCurrentAnswer();
                 }
             }, 2000);
         }
@@ -523,11 +531,9 @@
 
             playSound('congratulations');
 
-            // Set detail teks kategori
             document.getElementById('endCategoryName').textContent = selectedCategory === 'id' ? "Bahasa Indonesia" : "Sinau Boso Jowo";
             document.getElementById('endScoreValue').textContent = `${gameScore} Poin`;
 
-            // Tampilkan sisa nyawa
             const heartsBox = document.getElementById('endHeartsRemaining');
             heartsBox.innerHTML = '';
             for (let i = 0; i < livesRemaining; i++) {
@@ -535,7 +541,6 @@
             }
             if (livesRemaining === 0) heartsBox.textContent = "Habis";
 
-            // Evaluasi rekor baru
             const oldHighScore = parseInt(localStorage.getItem(LOCAL_STORAGE_KEY)) || 0;
             if (gameScore > oldHighScore) {
                 localStorage.setItem(LOCAL_STORAGE_KEY, gameScore);
@@ -545,7 +550,6 @@
                 document.getElementById('newHighScoreBadge').classList.add('hidden');
             }
 
-            // Beri gelar kelulusan bintang
             renderStars();
         }
 
